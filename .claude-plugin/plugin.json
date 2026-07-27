@@ -1,8 +1,8 @@
 {
   "name": "statusline-pro",
   "displayName": "Statusline Pro",
-  "version": "1.0.0",
-  "description": "컨텍스트 사용량과 5시간/주간 한도를 두 줄 상태줄로 표시합니다. Windows/macOS/Linux 공용.",
+  "version": "1.1.0",
+  "description": "컨텍스트 사용량과 5시간/주간 한도(초기화 시각 포함)를 두 줄 상태줄로 표시합니다. Windows/macOS/Linux 공용.",
   "license": "MIT",
   "keywords": ["statusline", "context", "usage", "rate-limit"]
 }

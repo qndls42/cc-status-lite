@@ -78,26 +78,35 @@ if [ "$AGE" -ge 60 ]; then
   ) >/dev/null 2>&1 &
 fi
 
-h5=""; d7=""
+h5=""; h5r=""; d7=""; d7r=""
 age "$uc"; cache_age=$AGE
 if [ -f "$uc" ]; then
-  { read -r h5; read -r d7; } <<EOF
+  # resets_at 은 "2026-07-27T10:40:00.455018+00:00" 형태(UTC).
+  # 소수점 이하와 오프셋을 잘라 Z 를 붙여 파싱한 뒤 strflocaltime 으로 로컬 시각 변환.
+  # date 명령은 쓰지 않는다 — GNU 의 -d 가 macOS 에 없어 크로스 플랫폼이 깨진다.
+  { read -r h5; read -r h5r; read -r d7; read -r d7r; } <<EOF
 $(jq -r '
-  (.five_hour.utilization as $x | if $x == null then "" else ($x | round | tostring) end),
-  (.seven_day.utilization as $x | if $x == null then "" else ($x | round | tostring) end)
+  def pct: if . == null then "" else (round | tostring) end;
+  def loc: try (.[0:19] + "Z" | fromdateiso8601 | strflocaltime("%m/%d %H:%M")) catch "";
+  (.five_hour.utilization | pct),
+  (.five_hour.resets_at // "" | loc),
+  (.seven_day.utilization | pct),
+  (.seven_day.resets_at // "" | loc)
 ' "$uc" 2>/dev/null | tr -d '\r')
 EOF
 fi
 
 e=$(printf '\033')
 GREEN="$e[32m"; YELLOW="$e[33m"; RED="$e[31m"; DIM="$e[2m"; RESET="$e[0m"
-# 임계치별 색상 (공식 문서 예시와 동일: 70% 경고 / 90% 위험). 서브셸 없이 $C 설정
+# 임계치별 색상 (공식 문서 예시와 동일: 70% 경고 / 90% 위험). 서브셸 없이 설정
+#   $C  = 퍼센트 색
+#   $CR = 초기화 시각 색 — 평소엔 흐리게, 70% 넘어가면 퍼센트와 같이 강조
 stale=""
 c_of() {
-  if [ -n "$stale" ]; then C=$DIM
-  elif [ "$1" -ge 90 ]; then C=$RED
-  elif [ "$1" -ge 70 ]; then C=$YELLOW
-  else C=$GREEN; fi
+  if [ -n "$stale" ]; then C=$DIM; CR=$DIM
+  elif [ "$1" -ge 90 ]; then C=$RED; CR=$RED
+  elif [ "$1" -ge 70 ]; then C=$YELLOW; CR=$YELLOW
+  else C=$GREEN; CR=$DIM; fi
 }
 
 line1="[$model] $disp"
@@ -107,8 +116,10 @@ line2=""
 [ -n "$cpct" ] && { c_of "$cpct"; line2="🧠 $C$cpct%$RESET $DIM($ctok)$RESET"; }
 # 15분 넘게 갱신 실패하면 숨기지 않고 흐리게 — 값은 계속 보이되 최신이 아님을 표시
 [ "$cache_age" -ge 900 ] && stale=1
-[ -n "$h5" ] && { c_of "$h5"; line2="$line2  ⏳ 5h $C$h5%$RESET"; }
-[ -n "$d7" ] && { c_of "$d7"; line2="$line2  📅 7d $C$d7%$RESET"; }
+[ -n "$h5" ] && { c_of "$h5"; line2="$line2  ⏳ 5h $C$h5%$RESET"
+                  [ -n "$h5r" ] && line2="$line2 $CR($h5r)$RESET"; }
+[ -n "$d7" ] && { c_of "$d7"; line2="$line2  📅 7d $C$d7%$RESET"
+                  [ -n "$d7r" ] && line2="$line2 $CR($d7r)$RESET"; }
 
 printf '%s\n' "$line1"
 [ -n "$line2" ] && printf '%s\n' "$line2"
