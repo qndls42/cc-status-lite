@@ -1,0 +1,13 @@
+{
+  "name": "statusline-pro",
+  "owner": {
+    "name": "jhkim"
+  },
+  "plugins": [
+    {
+      "name": "statusline-pro",
+      "source": "./",
+      "description": "컨텍스트 사용량과 5시간/주간 한도를 두 줄 상태줄로 표시합니다."
+    }
+  ]
+}
