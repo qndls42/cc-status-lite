@@ -60,9 +60,18 @@ if ($Refresh) {
 # ---------------------------------------------------------------------------
 # Render mode
 # ---------------------------------------------------------------------------
-try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
+# Claude Code writes the JSON as UTF-8, but [Console]::In decodes with the
+# console's input code page, which is the system ANSI one on Windows - a
+# Korean path in current_dir came back as mojibake. Read the raw stream and
+# decode it explicitly instead. Setting [Console]::InputEncoding is not an
+# option here: it throws when stdin is a pipe, which is always the case.
+# The output encoding is BOM-less on purpose; the BOM-carrying UTF8 instance
+# can prepend one on the first write.
+try { [Console]::OutputEncoding = New-Object Text.UTF8Encoding($false) } catch { }
 
-$raw = [Console]::In.ReadToEnd()
+$reader = New-Object IO.StreamReader([Console]::OpenStandardInput(),
+                                     (New-Object Text.UTF8Encoding($false)))
+$raw = $reader.ReadToEnd()
 try { $in = ConvertFrom-Json $raw } catch { exit 0 }
 
 # jq rounds half away from zero; .NET rounds half to even by default. Match jq

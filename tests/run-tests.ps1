@@ -45,7 +45,13 @@ function Invoke-StatusLine($inputText, $sandbox) {
     $psi.EnvironmentVariables['CLAUDE_CONFIG_DIR'] = (Join-Path $sandbox '.claude')
 
     $p = [Diagnostics.Process]::Start($psi)
-    $p.StandardInput.Write($inputText)
+    # Write raw UTF-8 bytes rather than going through StandardInput's writer,
+    # whose encoding follows the console code page on Windows PowerShell. A
+    # case with non-ASCII input would otherwise be mangled by the harness
+    # before the status line ever sees it.
+    $inBytes = [Text.Encoding]::UTF8.GetBytes($inputText)
+    $p.StandardInput.BaseStream.Write($inBytes, 0, $inBytes.Length)
+    $p.StandardInput.BaseStream.Flush()
     $p.StandardInput.Close()
     $out = $p.StandardOutput.ReadToEnd()
     [void]$p.StandardError.ReadToEnd()

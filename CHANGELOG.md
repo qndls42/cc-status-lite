@@ -49,6 +49,21 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.4
+
+### Fixed
+
+- **Non-ASCII paths came out as mojibake on Windows.** Claude Code writes the
+  status line's JSON as UTF-8, but `[Console]::In` decodes with the console's
+  input code page - the system ANSI one - so a Korean directory name arrived
+  already corrupted. The raw stream is now decoded as UTF-8 explicitly.
+  (`[Console]::InputEncoding` is not usable for this: it throws when stdin is
+  a pipe, which it always is here.) The output encoding is now BOM-less as
+  well, since the BOM-carrying UTF-8 instance can prepend one on first write.
+- The test harness fed stdin through a writer whose encoding follows the same
+  console code page, so it could not have caught this. It now writes raw
+  UTF-8 bytes, and `13-utf8-path` covers a Korean path end to end.
+
 ## 2.0.3
 
 ### Changed
