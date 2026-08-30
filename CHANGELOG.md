@@ -6,10 +6,18 @@ First public release, distributed as a plugin marketplace.
 
 ### Breaking
 
+- **Renamed from `statusline-pro` to `cc-status-lite`.** The old name collided
+  with an existing project of the same name and said nothing about the plugin
+  being lightweight. Everything moves with it: the repository, the marketplace
+  and plugin names, the skills (`/statuslite-install`, `/statuslite-uninstall`),
+  and the files written into the config directory. The usage cache is now
+  namespaced as `.cc-status-lite-cache.json` rather than claiming the generic
+  `.usage-cache.json`. Nobody was running the old name outside the author's own
+  machines, so no migration path is carried in the code.
 - **Installation moved to the marketplace.** Cloning into `~/.claude/skills/`
   is no longer supported: it registers the same skills a second time and the
   auto-update hook has no plugin root to work from. Install with
-  `/plugin marketplace add qndls42/statusline-pro`, then delete the old clone.
+  `/plugin marketplace add qndls42/cc-status-lite`, then delete the old clone.
 
 ### Added
 
@@ -55,5 +63,5 @@ First public release, distributed as a plugin marketplace.
   macOS and Linux.
 - Usage responses cached for a minute and refreshed in the background so
   rendering never blocks.
-- `install.sh` / `uninstall.sh`, and the `/statusline-install` and
-  `/statusline-uninstall` skills.
+- `install.sh` / `uninstall.sh`, and the `/statuslite-install` and
+  `/statuslite-uninstall` skills.

@@ -16,7 +16,7 @@ files is to fail when behaviour changes unintentionally.
 | File | Purpose |
 |---|---|
 | `input.json` | stdin for the status line. Required. `{HOME}` and `{DIR}` are replaced with sandbox paths. |
-| `cache.json` | `.usage-cache.json` fixture. Optional. |
+| `cache.json` | `.cc-status-lite-cache.json` fixture. Optional. |
 | `expected.txt` | Exact expected output. `\e` stands in for the ESC byte. |
 | `expected.re` | Regular expression, used instead of `expected.txt`. |
 | `opts` | `key=value` lines. `cache_age=<seconds>` backdates the cache to exercise the stale path. |

@@ -1,12 +1,12 @@
 {
-  "name": "statusline-pro",
+  "name": "cc-status-lite",
   "owner": {
     "name": "qndls42",
     "url": "https://github.com/qndls42"
   },
   "plugins": [
     {
-      "name": "statusline-pro",
+      "name": "cc-status-lite",
       "source": "./",
       "description": "Two-line status line showing context usage and your 5-hour and weekly limits, each with the time it resets."
     }

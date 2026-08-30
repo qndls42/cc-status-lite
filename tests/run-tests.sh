@@ -8,7 +8,7 @@
 #
 # Each case directory may contain:
 #   input.json     stdin for the status line (required)
-#   cache.json     a .usage-cache.json fixture (optional)
+#   cache.json     a .cc-status-lite-cache.json fixture (optional)
 #   expected.txt   exact expected output, with \e standing in for ESC
 #   expected.re    an extended regular expression, used instead of expected.txt
 #   opts           key=value lines; cache_age=<seconds> backdates cache.json
@@ -31,25 +31,25 @@ for case_dir in "$root"/tests/cases/*/; do
 
   # A fresh sandbox per case: HOME is redirected so ~ abbreviation is testable
   # and no real repository is ever in scope for the branch lookup.
-  sandbox=$(mktemp -d 2>/dev/null || mktemp -d -t statusline-pro)
+  sandbox=$(mktemp -d 2>/dev/null || mktemp -d -t cc-status-lite)
   mkdir -p "$sandbox/work" "$sandbox/.claude"
 
   cache_age=0
   [ -f "$case_dir/opts" ] && . "$case_dir/opts"
 
   if [ -f "$case_dir/cache.json" ]; then
-    cp "$case_dir/cache.json" "$sandbox/.claude/.usage-cache.json"
+    cp "$case_dir/cache.json" "$sandbox/.claude/.cc-status-lite-cache.json"
     if [ "$cache_age" -gt 0 ]; then
       # Backdate the cache to exercise the stale path. touch -t needs a
       # timestamp; compute it with the same date command on both BSD and GNU.
       ts=$(date -v-"${cache_age}"S '+%Y%m%d%H%M.%S' 2>/dev/null \
            || date -d "@$(( $(date +%s) - cache_age ))" '+%Y%m%d%H%M.%S' 2>/dev/null)
-      [ -n "$ts" ] && touch -t "$ts" "$sandbox/.claude/.usage-cache.json"
+      [ -n "$ts" ] && touch -t "$ts" "$sandbox/.claude/.cc-status-lite-cache.json"
     fi
   fi
   # A fresh stamp keeps the background refresh from firing: tests must never
   # reach the network.
-  : > "$sandbox/.claude/.usage-cache.json.stamp"
+  : > "$sandbox/.claude/.cc-status-lite-cache.json.stamp"
 
   input=$(sed -e "s|{HOME}|$sandbox|g" -e "s|{DIR}|$sandbox/work|g" "$case_dir/input.json")
 

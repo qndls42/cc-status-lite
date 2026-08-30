@@ -8,7 +8,7 @@ param([switch]$Refresh)
 $ErrorActionPreference = 'SilentlyContinue'
 
 $cfg = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $env:USERPROFILE '.claude' }
-$cache = Join-Path $cfg '.usage-cache.json'
+$cache = Join-Path $cfg '.cc-status-lite-cache.json'
 $stamp = "$cache.stamp"
 
 # ---------------------------------------------------------------------------

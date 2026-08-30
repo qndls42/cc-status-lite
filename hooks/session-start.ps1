@@ -2,7 +2,7 @@
 # Keep the two in sync - tests/run-tests.ps1 covers the status line itself.
 #
 # Two jobs, both cheap and quiet:
-#   1. keep statusline-pro.ps1 in the config directory identical to the copy
+#   1. keep cc-status-lite.ps1 in the config directory identical to the copy
 #      inside the plugin
 #   2. offer setup once, when no status line is configured at all
 #
@@ -19,10 +19,10 @@ $root = $env:CLAUDE_PLUGIN_ROOT
 if (-not $root) { exit 0 }
 
 $src = Join-Path $root 'scripts\statusline.ps1'
-$dest = Join-Path $cfg 'statusline-pro.ps1'
-$nudged = Join-Path $cfg '.statusline-pro-nudged'
-$legacyNoted = Join-Path $cfg '.statusline-pro-legacy-noted'
-$legacy = Join-Path $cfg 'skills\statusline-pro'
+$dest = Join-Path $cfg 'cc-status-lite.ps1'
+$nudged = Join-Path $cfg '.cc-status-lite-nudged'
+$legacyNoted = Join-Path $cfg '.cc-status-lite-legacy-noted'
+$legacy = Join-Path $cfg 'skills\cc-status-lite'
 
 if (-not (Test-Path -LiteralPath $src)) { exit 0 }
 
@@ -38,13 +38,13 @@ if (Test-Path -LiteralPath $settings) {
 $notes = @()
 
 # A pre-marketplace install left a manual clone under .claude\skills\. It still
-# registers the same skills, so /statusline-install shows up twice. Say so once.
+# registers the same skills, so /statuslite-install shows up twice. Say so once.
 if ((Test-Path -LiteralPath $legacy) -and -not (Test-Path -LiteralPath $legacyNoted)) {
     New-Item -ItemType File -Path $legacyNoted -Force | Out-Null
-    $notes += "statusline-pro is also present as an old manual clone at $legacy. It is now installed as a plugin, so that directory registers the same skills a second time. Tell the user they can delete it - do not delete it yourself."
+    $notes += "cc-status-lite is also present as an old manual clone at $legacy. It is now installed as a plugin, so that directory registers the same skills a second time. Tell the user they can delete it - do not delete it yourself."
 }
 
-if ($cur -like '*statusline-pro.ps1*') {
+if ($cur -like '*cc-status-lite.ps1*') {
     # Installed, PowerShell variant. Repair the copy whenever it differs from
     # the plugin's version: this covers plugin updates, a hand-edited copy and
     # a truncated one alike.
@@ -54,7 +54,7 @@ if ($cur -like '*statusline-pro.ps1*') {
     }
     if (-not $same) { Copy-Item -LiteralPath $src -Destination $dest -Force }
 }
-elseif ($cur -like '*statusline-pro*') {
+elseif ($cur -like '*cc-status-lite*') {
     # Installed, but pointing at the shell variant. session-start.sh owns that
     # copy - leave it alone.
 }
@@ -63,7 +63,7 @@ elseif ([string]::IsNullOrEmpty($cur)) {
     # already seen (and implicitly declined) the offer.
     if (-not (Test-Path -LiteralPath $nudged)) {
         New-Item -ItemType File -Path $nudged -Force | Out-Null
-        $notes += "STATUSLINE SETUP NEEDED: the statusline-pro plugin is installed but no status line is configured. It shows context usage plus the 5-hour and weekly limits with their reset times. To enable it, run: powershell -NoProfile -ExecutionPolicy Bypass -File `"$root\scripts\install.ps1`". Offer this to the user on the first interaction and only run it if they agree."
+        $notes += "STATUSLINE SETUP NEEDED: the cc-status-lite plugin is installed but no status line is configured. It shows context usage plus the 5-hour and weekly limits with their reset times. To enable it, run: powershell -NoProfile -ExecutionPolicy Bypass -File `"$root\scripts\install.ps1`". Offer this to the user on the first interaction and only run it if they agree."
     }
 }
 # Any other status line belongs to someone else: not ours to touch, and not

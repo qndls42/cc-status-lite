@@ -1,11 +1,11 @@
-# statusline-pro uninstaller, Windows-native counterpart of uninstall.sh.
+# cc-status-lite uninstaller, Windows-native counterpart of uninstall.sh.
 # Restores the previous status line (or drops the key) and removes the files
 # this plugin created.
 $ErrorActionPreference = 'Stop'
 
 $cfg = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $env:USERPROFILE '.claude' }
 $settings = Join-Path $cfg 'settings.json'
-$prevfile = Join-Path $cfg '.statusline-pro-previous'
+$prevfile = Join-Path $cfg '.cc-status-lite-previous'
 
 if (-not (Test-Path -LiteralPath $settings)) {
     Write-Output "$settings does not exist. Nothing to do."
@@ -22,9 +22,9 @@ try {
 
 $cur = ''
 if ($obj.statusLine) { $cur = [string]$obj.statusLine.command }
-if ($cur -notlike '*statusline-pro*') {
+if ($cur -notlike '*cc-status-lite*') {
     $shown = if ($cur) { $cur } else { '(none)' }
-    Write-Output "The current status line is not statusline-pro: $shown"
+    Write-Output "The current status line is not cc-status-lite: $shown"
     Write-Output "Leaving it untouched."
     exit 0
 }
@@ -46,12 +46,12 @@ $tmp = "$settings.tmp.$PID"
                         (New-Object Text.UTF8Encoding($false)))
 Move-Item -LiteralPath $tmp -Destination $settings -Force
 
-foreach ($f in @('statusline-pro.ps1', 'statusline-pro.sh', '.usage-cache.json',
-                 '.usage-cache.json.stamp', '.statusline-pro-nudged',
-                 '.statusline-pro-legacy-noted')) {
+foreach ($f in @('cc-status-lite.ps1', 'cc-status-lite.sh', '.cc-status-lite-cache.json',
+                 '.cc-status-lite-cache.json.stamp', '.cc-status-lite-nudged',
+                 '.cc-status-lite-legacy-noted')) {
     Remove-Item -LiteralPath (Join-Path $cfg $f) -Force -ErrorAction SilentlyContinue
 }
-Get-ChildItem -LiteralPath $cfg -Filter '.usage-cache.json.tmp.*' -Force -ErrorAction SilentlyContinue |
+Get-ChildItem -LiteralPath $cfg -Filter '.cc-status-lite-cache.json.tmp.*' -Force -ErrorAction SilentlyContinue |
     Remove-Item -Force -ErrorAction SilentlyContinue
 
 Write-Output "Uninstalled. New sessions will reflect the change."

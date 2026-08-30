@@ -1,5 +1,5 @@
 #!/bin/sh
-# statusline-pro installer: copy the script into the config directory and write
+# cc-status-lite installer: copy the script into the config directory and write
 # the statusLine key in settings.json.
 #
 # Plugins cannot set the main statusLine key - the documentation allows only
@@ -10,7 +10,7 @@ set -e
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cfg="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-dest="$cfg/statusline-pro.sh"
+dest="$cfg/cc-status-lite.sh"
 settings="$cfg/settings.json"
 
 if ! command -v jq >/dev/null 2>&1; then
@@ -40,9 +40,9 @@ fi
 # Keep any pre-existing status line that is not ours, so it can be restored.
 prev=$(jq -r '.statusLine.command // empty' "$settings")
 case "$prev" in
-  ''|*statusline-pro*) ;;
+  ''|*cc-status-lite*) ;;
   *)
-    printf '%s\n' "$prev" > "$cfg/.statusline-pro-previous"
+    printf '%s\n' "$prev" > "$cfg/.cc-status-lite-previous"
     echo "Backed up your existing status line: $prev"
     ;;
 esac
@@ -50,18 +50,18 @@ esac
 # Use the ~ form for the default config directory (the shape Claude Code
 # documents); fall back to an absolute path for a custom one.
 case "$cfg" in
-  "$HOME/.claude") cmd='bash ~/.claude/statusline-pro.sh' ;;
+  "$HOME/.claude") cmd='bash ~/.claude/cc-status-lite.sh' ;;
   *) cmd="bash \"$dest\"" ;;
 esac
 
-cp "$settings" "$settings.bak.statusline-pro"
+cp "$settings" "$settings.bak.cc-status-lite"
 tmp="$settings.tmp.$$"
 jq --arg c "$cmd" '.statusLine = {"type": "command", "command": $c}' "$settings" > "$tmp"
 mv -f "$tmp" "$settings"
 
 echo "Installed."
 echo "  script   : $dest"
-echo "  settings : $settings  (backup: $settings.bak.statusline-pro)"
+echo "  settings : $settings  (backup: $settings.bak.cc-status-lite)"
 echo "  command  : $cmd"
 echo
 echo "Preview:"

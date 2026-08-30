@@ -7,7 +7,7 @@
 #
 # Each case directory may contain:
 #   input.json     stdin for the status line (required)
-#   cache.json     a .usage-cache.json fixture (optional)
+#   cache.json     a .cc-status-lite-cache.json fixture (optional)
 #   expected.txt   exact expected output, with \e standing in for ESC
 #   expected.re    a regular expression, used instead of expected.txt
 #   opts           key=value lines; cache_age=<seconds> backdates cache.json
@@ -57,7 +57,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     $inputFile = Join-Path $caseDir.FullName 'input.json'
     if (-not (Test-Path -LiteralPath $inputFile)) { continue }
 
-    $sandbox = Join-Path ([IO.Path]::GetTempPath()) ("statusline-pro-" + [Guid]::NewGuid().ToString('N'))
+    $sandbox = Join-Path ([IO.Path]::GetTempPath()) ("cc-status-lite-" + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path (Join-Path $sandbox 'work') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $sandbox '.claude') -Force | Out-Null
 
@@ -70,7 +70,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     }
 
     $cacheFile = Join-Path $caseDir.FullName 'cache.json'
-    $destCache = Join-Path $sandbox '.claude\.usage-cache.json'
+    $destCache = Join-Path $sandbox '.claude\.cc-status-lite-cache.json'
     if (Test-Path -LiteralPath $cacheFile) {
         Copy-Item -LiteralPath $cacheFile -Destination $destCache -Force
         if ($cacheAge -gt 0) {
@@ -79,7 +79,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     }
     # A fresh stamp keeps the background refresh from firing: tests must never
     # reach the network.
-    New-Item -ItemType File -Path (Join-Path $sandbox '.claude\.usage-cache.json.stamp') -Force | Out-Null
+    New-Item -ItemType File -Path (Join-Path $sandbox '.claude\.cc-status-lite-cache.json.stamp') -Force | Out-Null
 
     $inputText = (Get-Content -LiteralPath $inputFile -Raw).
         Replace('{HOME}', ($sandbox -replace '\\', '\\\\')).

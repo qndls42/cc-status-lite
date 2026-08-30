@@ -1,4 +1,4 @@
-# statusline-pro
+# cc-status-lite
 
 A two-line Claude Code status line: context usage on the left, your 5-hour and
 weekly limits on the right, each with the local time it resets.
@@ -21,15 +21,15 @@ weekly limits on the right, each with the local time it resets.
 ## Install
 
 ```
-/plugin marketplace add qndls42/statusline-pro
-/plugin install statusline-pro@statusline-pro
+/plugin marketplace add qndls42/cc-status-lite
+/plugin install cc-status-lite@cc-status-lite
 ```
 
 Restart Claude Code. On the next session Claude offers to turn the status line
 on; accept and it is done. To do it yourself at any time:
 
 ```
-/statusline-install
+/statuslite-install
 ```
 
 ### Requirements
@@ -53,12 +53,12 @@ installed copy in sync with the plugin on every session start. There is no
 ## Uninstall
 
 ```
-/statusline-uninstall
+/statuslite-uninstall
 ```
 
 This restores whatever status line you had before, or removes the key if you
 had none. It touches nothing else in `settings.json`. To remove the plugin
-itself as well, run `/plugin uninstall statusline-pro@statusline-pro`.
+itself as well, run `/plugin uninstall cc-status-lite@cc-status-lite`.
 
 ## Why there is a separate install step
 
@@ -97,7 +97,7 @@ shell implementation passes the header through `curl --config -` on stdin; the
 PowerShell implementation keeps it in memory. The token is never written to
 disk, and this plugin never refreshes or stores it.
 
-**What it writes.** `~/.claude/.usage-cache.json`, mode `600`, holding four
+**What it writes.** `~/.claude/.cc-status-lite-cache.json`, mode `600`, holding four
 fields: `utilization` and `resets_at` for the 5-hour and weekly windows. The API
 response also carries spend and credit balances; those are discarded rather than
 cached, because the status line does not display them.
@@ -116,7 +116,7 @@ install them, and reading them first is the right instinct.
 ## Troubleshooting
 
 **The 5h/7d values never appear.** The first refresh takes up to a minute. After
-that, check that `~/.claude/.usage-cache.json` exists. If it does not, the token
+that, check that `~/.claude/.cc-status-lite-cache.json` exists. If it does not, the token
 lookup failed - sign in again in Claude Code and start a new session.
 
 **They appear but stay dim.** Dim means no successful refresh for 15 minutes,
@@ -124,19 +124,19 @@ usually an expired token. Claude Code refreshes credentials on its own; the
 values recover on the next successful call.
 
 **Nothing shows at all.** Confirm `statusLine` in `~/.claude/settings.json`
-points at `statusline-pro`, and that the status line runs on its own:
+points at `cc-status-lite`, and that the status line runs on its own:
 
 ```bash
 echo '{"model":{"display_name":"Test"},"workspace":{"current_dir":"'"$HOME"'"},"context_window":{"used_percentage":42,"total_input_tokens":84000,"context_window_size":200000}}' \
-  | bash ~/.claude/statusline-pro.sh
+  | bash ~/.claude/cc-status-lite.sh
 ```
 
 **`bad interpreter: /bin/sh^M` on Windows.** The scripts were checked out with
 CRLF endings. `.gitattributes` pins them to LF; re-clone, or run
 `git config core.autocrlf false` and check out again.
 
-**`/statusline-install` appears twice.** An older manual clone is still in
-`~/.claude/skills/statusline-pro`. Delete it - the plugin supersedes it.
+**`/statuslite-install` appears twice.** An older manual clone is still in
+`~/.claude/skills/cc-status-lite`. Delete it - the plugin supersedes it.
 
 ## Development
 

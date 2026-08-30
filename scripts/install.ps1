@@ -1,4 +1,4 @@
-# statusline-pro installer, Windows-native counterpart of install.sh.
+# cc-status-lite installer, Windows-native counterpart of install.sh.
 # Needs neither jq nor Git Bash.
 #
 # Plugins cannot set the main statusLine key - the documentation allows only
@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
 $cfg = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $env:USERPROFILE '.claude' }
-$dest = Join-Path $cfg 'statusline-pro.ps1'
+$dest = Join-Path $cfg 'cc-status-lite.ps1'
 $settings = Join-Path $cfg 'settings.json'
 
 New-Item -ItemType Directory -Path $cfg -Force | Out-Null
@@ -33,14 +33,14 @@ if ($null -eq $obj) { $obj = [pscustomobject]@{} }
 # Keep any pre-existing status line that is not ours, so it can be restored.
 $prev = ''
 if ($obj.statusLine) { $prev = [string]$obj.statusLine.command }
-if ($prev -and $prev -notlike '*statusline-pro*') {
-    $prev | Set-Content -LiteralPath (Join-Path $cfg '.statusline-pro-previous') -Encoding UTF8
+if ($prev -and $prev -notlike '*cc-status-lite*') {
+    $prev | Set-Content -LiteralPath (Join-Path $cfg '.cc-status-lite-previous') -Encoding UTF8
     Write-Output "Backed up your existing status line: $prev"
 }
 
 $cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File `"$dest`""
 
-Copy-Item -LiteralPath $settings -Destination "$settings.bak.statusline-pro" -Force
+Copy-Item -LiteralPath $settings -Destination "$settings.bak.cc-status-lite" -Force
 
 $statusLine = [pscustomobject]@{ type = 'command'; command = $cmd }
 if ($obj.PSObject.Properties.Name -contains 'statusLine') {
@@ -60,7 +60,7 @@ Move-Item -LiteralPath $tmp -Destination $settings -Force
 
 Write-Output "Installed."
 Write-Output "  script   : $dest"
-Write-Output "  settings : $settings  (backup: $settings.bak.statusline-pro)"
+Write-Output "  settings : $settings  (backup: $settings.bak.cc-status-lite)"
 Write-Output "  command  : $cmd"
 Write-Output ""
 Write-Output "Preview:"

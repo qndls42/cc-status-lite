@@ -1,9 +1,9 @@
 ---
-name: statusline-install
-description: Install the statusline-pro status line. Use when the user says "install the status line", "statusline install", "/statusline-install", or otherwise asks to turn statusline-pro on.
+name: statuslite-install
+description: Install the cc-status-lite status line. Use when the user says "install the status line", "statusline install", "/statuslite-install", or otherwise asks to turn cc-status-lite on.
 ---
 
-# Install statusline-pro
+# Install cc-status-lite
 
 Run the installer for the user's platform and report its output verbatim.
 
@@ -26,7 +26,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scrip
   user. Do not install `jq` for them. On Windows, offer `install.ps1` instead -
   it needs neither `jq` nor Git Bash.
 - If the script prints "Backed up your existing status line", **tell the user**.
-  Another status line was replaced, and `/statusline-uninstall` restores it.
+  Another status line was replaced, and `/statuslite-uninstall` restores it.
 - Close by saying: the status line appears in new sessions, and the 5h/7d
   figures need up to a minute for their first refresh.
 - Updates need no action. A SessionStart hook keeps the installed copy in sync

@@ -1,6 +1,6 @@
 #!/bin/sh
 # SessionStart hook. Two jobs, both cheap and quiet:
-#   1. keep ~/.claude/statusline-pro.sh identical to the copy inside the plugin
+#   1. keep ~/.claude/cc-status-lite.sh identical to the copy inside the plugin
 #   2. offer setup once, when no status line is configured at all
 #
 # Why the copy exists: plugins cannot set the main statusLine key (only agent
@@ -16,10 +16,10 @@ cfg="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 settings="$cfg/settings.json"
 root="${CLAUDE_PLUGIN_ROOT:-}"
 src="$root/scripts/statusline.sh"
-dest="$cfg/statusline-pro.sh"
-nudged="$cfg/.statusline-pro-nudged"
-legacy_noted="$cfg/.statusline-pro-legacy-noted"
-legacy="$cfg/skills/statusline-pro"
+dest="$cfg/cc-status-lite.sh"
+nudged="$cfg/.cc-status-lite-nudged"
+legacy_noted="$cfg/.cc-status-lite-legacy-noted"
+legacy="$cfg/skills/cc-status-lite"
 
 [ -n "$root" ] && [ -f "$src" ] || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
@@ -30,14 +30,14 @@ cur=""
 notes=""
 
 # A pre-marketplace install left a git clone under ~/.claude/skills/. It still
-# registers the same skills, so /statusline-install shows up twice. Say so once.
+# registers the same skills, so /statuslite-install shows up twice. Say so once.
 if [ -d "$legacy" ] && [ ! -f "$legacy_noted" ]; then
   : > "$legacy_noted" 2>/dev/null
-  notes="statusline-pro is also present as an old manual clone at $legacy. It is now installed as a plugin, so that directory registers the same skills a second time. Tell the user they can delete it - do not delete it yourself."
+  notes="cc-status-lite is also present as an old manual clone at $legacy. It is now installed as a plugin, so that directory registers the same skills a second time. Tell the user they can delete it - do not delete it yourself."
 fi
 
 case "$cur" in
-  *statusline-pro.sh*)
+  *cc-status-lite.sh*)
     # Installed, shell variant. Repair the copy whenever it differs from the
     # plugin's version: this covers plugin updates, a hand-edited copy and a
     # truncated one alike.
@@ -45,7 +45,7 @@ case "$cur" in
       cp "$src" "$dest" 2>/dev/null && chmod +x "$dest" 2>/dev/null
     fi
     ;;
-  *statusline-pro*)
+  *cc-status-lite*)
     # Installed, but pointing at the PowerShell variant. session-start.ps1
     # owns that copy - leave it alone.
     ;;
@@ -57,7 +57,7 @@ case "$cur" in
       : > "$nudged" 2>/dev/null
       [ -n "$notes" ] && notes="$notes
 "
-      notes="${notes}STATUSLINE SETUP NEEDED: the statusline-pro plugin is installed but no status line is configured. It shows context usage plus the 5-hour and weekly limits with their reset times. To enable it, run: sh \"$root/scripts/install.sh\". Offer this to the user on the first interaction and only run it if they agree."
+      notes="${notes}STATUSLINE SETUP NEEDED: the cc-status-lite plugin is installed but no status line is configured. It shows context usage plus the 5-hour and weekly limits with their reset times. To enable it, run: sh \"$root/scripts/install.sh\". Offer this to the user on the first interaction and only run it if they agree."
     fi
     ;;
   *)

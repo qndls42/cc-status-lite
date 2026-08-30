@@ -56,7 +56,7 @@ age() {
 # The 5h/7d limits are not in stdin, so they need an authenticated API call.
 # The status line runs on every render and must never block: read the cache
 # only, and kick off a background refresh when it is older than a minute.
-uc="$cfg/.usage-cache.json"
+uc="$cfg/.cc-status-lite-cache.json"
 age "$uc.stamp"
 if [ "$AGE" -ge 60 ]; then
   : > "$uc.stamp"   # stamp first so concurrent renders do not all fetch

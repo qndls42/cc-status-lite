@@ -1,4 +1,4 @@
-# statusline-pro
+# cc-status-lite
 
 Claude Code 상태줄을 두 줄로 바꿉니다. 왼쪽은 컨텍스트 사용량, 오른쪽은 5시간·주간
 한도이고, 괄호 안은 각 한도가 초기화되는 로컬 시각입니다.
@@ -20,15 +20,15 @@ Claude Code 상태줄을 두 줄로 바꿉니다. 왼쪽은 컨텍스트 사용�
 ## 설치
 
 ```
-/plugin marketplace add qndls42/statusline-pro
-/plugin install statusline-pro@statusline-pro
+/plugin marketplace add qndls42/cc-status-lite
+/plugin install cc-status-lite@cc-status-lite
 ```
 
 Claude Code를 재시작하면 다음 세션에서 Claude가 상태줄을 켤지 먼저 물어봅니다.
 직접 실행하려면 언제든:
 
 ```
-/statusline-install
+/statuslite-install
 ```
 
 ### 요구사항
@@ -50,12 +50,12 @@ Claude Code를 재시작하면 다음 세션에서 Claude가 상태줄을 켤지
 ## 제거
 
 ```
-/statusline-uninstall
+/statuslite-uninstall
 ```
 
 이전에 쓰던 상태줄이 있었다면 복원하고, 없었다면 키만 제거합니다. `settings.json`
 의 나머지는 건드리지 않습니다. 플러그인 자체까지 지우려면
-`/plugin uninstall statusline-pro@statusline-pro` 를 실행하세요.
+`/plugin uninstall cc-status-lite@cc-status-lite` 를 실행하세요.
 
 ## 왜 설치 단계가 따로 필요한가
 
@@ -91,7 +91,7 @@ macOS의 `ps` 와 Linux의 `/proc/<pid>/cmdline` 으로 누구나 읽을 수 있
 stdin 으로 전달하고, PowerShell 구현은 메모리에만 둡니다. 토큰은 디스크에 쓰이지
 않으며, 이 플러그인은 토큰을 갱신하거나 저장하지 않습니다.
 
-**무엇을 쓰는가.** `~/.claude/.usage-cache.json`, 권한 `600`, 네 개 필드만
+**무엇을 쓰는가.** `~/.claude/.cc-status-lite-cache.json`, 권한 `600`, 네 개 필드만
 (5시간·주간의 `utilization` 과 `resets_at`). API 응답에는 지출액과 크레딧 잔액도
 들어 있지만 상태줄이 표시하지 않으므로 캐시하지 않고 버립니다.
 
@@ -107,26 +107,26 @@ stdin 으로 전달하고, PowerShell 구현은 메모리에만 둡니다. 토�
 ## 문제 해결
 
 **5h/7d 값이 안 보입니다.** 첫 갱신에 최대 1분 걸립니다. 그 뒤에도 없으면
-`~/.claude/.usage-cache.json` 이 있는지 보세요. 없으면 토큰 조회가 실패한 것이니
+`~/.claude/.cc-status-lite-cache.json` 이 있는지 보세요. 없으면 토큰 조회가 실패한 것이니
 Claude Code에서 다시 로그인하고 새 세션을 시작하세요.
 
 **보이는데 계속 흐립니다.** 흐린 표시는 15분 넘게 갱신에 성공하지 못했다는 뜻이고,
 대개 토큰 만료입니다. Claude Code가 자격증명을 갱신하면 다음 호출에서 복구됩니다.
 
 **아무것도 안 보입니다.** `~/.claude/settings.json` 의 `statusLine` 이
-`statusline-pro` 를 가리키는지 확인하고, 스크립트를 직접 실행해 보세요:
+`cc-status-lite` 를 가리키는지 확인하고, 스크립트를 직접 실행해 보세요:
 
 ```bash
 echo '{"model":{"display_name":"Test"},"workspace":{"current_dir":"'"$HOME"'"},"context_window":{"used_percentage":42,"total_input_tokens":84000,"context_window_size":200000}}' \
-  | bash ~/.claude/statusline-pro.sh
+  | bash ~/.claude/cc-status-lite.sh
 ```
 
 **Windows에서 `bad interpreter: /bin/sh^M`.** 스크립트가 CRLF로 체크아웃된
 경우입니다. `.gitattributes` 가 LF로 고정하고 있으니 다시 clone 하거나,
 `git config core.autocrlf false` 후 다시 체크아웃하세요.
 
-**`/statusline-install` 이 두 번 나옵니다.** 예전 수동 clone이
-`~/.claude/skills/statusline-pro` 에 남아 있습니다. 플러그인이 대체하므로 지우면
+**`/statuslite-install` 이 두 번 나옵니다.** 예전 수동 clone이
+`~/.claude/skills/cc-status-lite` 에 남아 있습니다. 플러그인이 대체하므로 지우면
 됩니다.
 
 ## 개발

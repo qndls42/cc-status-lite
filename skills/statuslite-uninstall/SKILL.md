@@ -1,9 +1,9 @@
 ---
-name: statusline-uninstall
-description: Remove the statusline-pro status line. Use when the user says "remove the status line", "statusline uninstall", "/statusline-uninstall", or asks to turn statusline-pro off.
+name: statuslite-uninstall
+description: Remove the cc-status-lite status line. Use when the user says "remove the status line", "statusline uninstall", "/statuslite-uninstall", or asks to turn cc-status-lite off.
 ---
 
-# Uninstall statusline-pro
+# Uninstall cc-status-lite
 
 Run the uninstaller for the user's platform and report its output verbatim.
 
@@ -27,7 +27,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scrip
 - The script removes only the `statusLine` key. Everything else is untouched.
 - If a status line was backed up during install, it is restored and the script
   says so. Pass that on.
-- If the current status line is not statusline-pro, the script exits without
+- If the current status line is not cc-status-lite, the script exits without
   changing anything. Report that rather than forcing it.
 - This removes the status line, not the plugin. To remove the plugin itself the
-  user runs `/plugin uninstall statusline-pro@statusline-pro`.
+  user runs `/plugin uninstall cc-status-lite@cc-status-lite`.

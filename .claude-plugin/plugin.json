@@ -1,14 +1,14 @@
 {
-  "name": "statusline-pro",
-  "displayName": "Statusline Pro",
+  "name": "cc-status-lite",
+  "displayName": "CC Status Lite",
   "version": "2.0.0",
   "description": "Two-line status line showing context usage and your 5-hour and weekly limits, each with the time it resets. Works on Windows, macOS and Linux.",
   "author": {
     "name": "qndls42",
     "url": "https://github.com/qndls42"
   },
-  "homepage": "https://github.com/qndls42/statusline-pro",
-  "repository": "https://github.com/qndls42/statusline-pro",
+  "homepage": "https://github.com/qndls42/cc-status-lite",
+  "repository": "https://github.com/qndls42/cc-status-lite",
   "license": "MIT",
   "keywords": ["statusline", "context", "usage", "rate-limit", "quota"]
 }
