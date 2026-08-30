@@ -74,9 +74,11 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     $destCache = Join-Path $sandbox '.claude\.cc-status-lite-cache.json'
     if (Test-Path -LiteralPath $cacheFile) {
         Copy-Item -LiteralPath $cacheFile -Destination $destCache -Force
-        if ($cacheAge -gt 0) {
-            (Get-Item -LiteralPath $destCache).LastWriteTime = (Get-Date).AddSeconds(-$cacheAge)
-        }
+        # Stamp the mtime unconditionally. Copy-Item preserves the source's
+        # timestamp, and the fixture's timestamp is whenever the repository was
+        # checked out - the status line dims a cache older than 15 minutes, so
+        # leaving it alone makes every colour case fail once the clone ages.
+        (Get-Item -LiteralPath $destCache).LastWriteTime = (Get-Date).AddSeconds(-$cacheAge)
     }
     # A fresh stamp keeps the background refresh from firing: tests must never
     # reach the network.

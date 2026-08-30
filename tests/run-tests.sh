@@ -40,13 +40,14 @@ for case_dir in "$root"/tests/cases/*/; do
 
   if [ -f "$case_dir/cache.json" ]; then
     cp "$case_dir/cache.json" "$sandbox/.claude/.cc-status-lite-cache.json"
-    if [ "$cache_age" -gt 0 ]; then
-      # Backdate the cache to exercise the stale path. touch -t needs a
-      # timestamp; compute it with the same date command on both BSD and GNU.
-      ts=$(date -v-"${cache_age}"S '+%Y%m%d%H%M.%S' 2>/dev/null \
-           || date -d "@$(( $(date +%s) - cache_age ))" '+%Y%m%d%H%M.%S' 2>/dev/null)
-      [ -n "$ts" ] && touch -t "$ts" "$sandbox/.claude/.cc-status-lite-cache.json"
-    fi
+    # Stamp the mtime unconditionally rather than relying on what cp leaves
+    # behind. cache_age=0 means "fresh"; anything older than 15 minutes is
+    # dimmed by the status line, so the fixture's own timestamp must never be
+    # what decides the outcome. touch -t needs a timestamp; compute it with
+    # whichever date syntax this platform has, BSD first then GNU.
+    ts=$(date -v-"${cache_age}"S '+%Y%m%d%H%M.%S' 2>/dev/null \
+         || date -d "@$(( $(date +%s) - cache_age ))" '+%Y%m%d%H%M.%S' 2>/dev/null)
+    [ -n "$ts" ] && touch -t "$ts" "$sandbox/.claude/.cc-status-lite-cache.json"
   fi
   # A fresh stamp keeps the background refresh from firing: tests must never
   # reach the network.
