@@ -15,7 +15,7 @@ files is to fail when behaviour changes unintentionally.
 
 | File | Purpose |
 |---|---|
-| `input.json` | stdin for the status line. Required. `{HOME}` and `{DIR}` are replaced with sandbox paths. |
+| `input.json` | stdin for the status line. Required. `{HOME}` and `{DIR}` are replaced with sandbox paths, always written with forward slashes so one expected file serves both runners. |
 | `cache.json` | `.cc-status-lite-cache.json` fixture. Optional. |
 | `expected.txt` | Exact expected output. `\e` stands in for the ESC byte. |
 | `expected.re` | Regular expression, used instead of `expected.txt`. |
@@ -29,6 +29,16 @@ overridden per process. Cases that carry a real timestamp therefore assert the
 *shape* of the rendered time (`10-reset-time`), while every case that checks
 colours, thresholds, layout and number formatting sets `resets_at` to `null` so
 its expectation is identical everywhere.
+
+## Windows path handling
+
+`{HOME}` and `{DIR}` are substituted as forward-slash paths on every platform,
+so the status line abbreviates them to `~/work` identically under both runners.
+Backslash input - what Claude Code actually hands the status line on Windows -
+is covered by `12-windows-path`, which passes a literal `C:\Program Files\demo`
+and expects it back unchanged. That case is platform-independent: both
+implementations normalise to forward slashes internally and restore backslashes
+on output, so it runs the same on macOS.
 
 ## What the runners guarantee
 

@@ -81,9 +81,16 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     # reach the network.
     New-Item -ItemType File -Path (Join-Path $sandbox '.claude\.cc-status-lite-cache.json.stamp') -Force | Out-Null
 
+    # Substitute forward-slash paths. Two reasons: they need no JSON escaping
+    # (a backslash would, and -replace's replacement string does not treat a
+    # backslash as an escape, which made the earlier attempt double them), and
+    # the status line then prints ~/work on every platform, so one expected.txt
+    # serves both runners. Backslash handling has its own case instead.
+    $homeFwd = $sandbox.Replace('\', '/')
+    $dirFwd = (Join-Path $sandbox 'work').Replace('\', '/')
     $inputText = (Get-Content -LiteralPath $inputFile -Raw).
-        Replace('{HOME}', ($sandbox -replace '\\', '\\\\')).
-        Replace('{DIR}', ((Join-Path $sandbox 'work') -replace '\\', '\\\\'))
+        Replace('{HOME}', $homeFwd).
+        Replace('{DIR}', $dirFwd)
 
     $actual = Invoke-StatusLine $inputText $sandbox
     $actualEsc = $actual.Replace([string]$esc, '\e')

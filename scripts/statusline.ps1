@@ -148,7 +148,13 @@ if (Test-Path -LiteralPath $cache) {
         # LocalDateTime does the conversion.
         function Convert-Reset($s) {
             if (-not $s) { return '' }
-            try { return ([datetimeoffset]::Parse($s)).LocalDateTime.ToString('MM/dd HH:mm') } catch { return '' }
+            # '/' in a .NET custom date format is not a literal slash - it is a
+            # placeholder for the current culture's date separator, which is '-'
+            # under ko-KR and others. Format through the invariant culture so
+            # both implementations print MM/dd.
+            try {
+                return ([datetimeoffset]::Parse($s)).LocalDateTime.ToString('MM/dd HH:mm', $inv)
+            } catch { return '' }
         }
         if ($null -ne $u.five_hour.utilization) {
             $h5 = (Round-Half ([double]$u.five_hour.utilization)).ToString($inv)
@@ -163,6 +169,16 @@ if (Test-Path -LiteralPath $cache) {
 
 $e = [char]27
 $GREEN = "$e[32m"; $YELLOW = "$e[33m"; $RED = "$e[31m"; $DIM = "$e[2m"; $RESET = "$e[0m"
+
+# Icons are built from code points rather than written literally: Windows
+# PowerShell 5.1 reads a BOM-less script with the system ANSI code page, which
+# would mangle literal emoji. [char] is not usable either - System.Char is a
+# single UTF-16 code unit, so anything above U+FFFF throws and the surrounding
+# expression silently collapses to an empty string. ConvertFromUtf32 returns
+# the surrogate pair, and works for BMP code points too.
+$ICON_CTX = [char]::ConvertFromUtf32(0x1F9E0)   # brain, astral
+$ICON_5H  = [char]::ConvertFromUtf32(0x23F3)    # hourglass, BMP
+$ICON_7D  = [char]::ConvertFromUtf32(0x1F4C5)   # calendar, astral
 
 # After 15 minutes without a successful refresh, dim the values rather than
 # hiding them: they stay visible, just marked as no longer current. The context
@@ -188,17 +204,17 @@ if ($branch) { $line1 += " ($branch)" }
 $segments = @()
 if ($cpct -ne '') {
     $c = Get-Colours ([int]$cpct) $false
-    $segments += "$([char]0x1F9E0) $($c[0])$cpct%$RESET $DIM($ctok)$RESET"
+    $segments += "$ICON_CTX $($c[0])$cpct%$RESET $DIM($ctok)$RESET"
 }
 if ($h5 -ne '') {
     $c = Get-Colours ([int]$h5) $stale
-    $seg = "$([char]0x23F3) 5h $($c[0])$h5%$RESET"
+    $seg = "$ICON_5H 5h $($c[0])$h5%$RESET"
     if ($h5r) { $seg += " $($c[1])($h5r)$RESET" }
     $segments += $seg
 }
 if ($d7 -ne '') {
     $c = Get-Colours ([int]$d7) $stale
-    $seg = "$([char]0x1F4C5) 7d $($c[0])$d7%$RESET"
+    $seg = "$ICON_7D 7d $($c[0])$d7%$RESET"
     if ($d7r) { $seg += " $($c[1])($d7r)$RESET" }
     $segments += $seg
 }

@@ -1,0 +1,2 @@
+[T] C:\Program Files\demo
+🧠 \e[32m7%\e[0m \e[2m(2k/200k)\e[0m

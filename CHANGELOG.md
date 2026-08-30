@@ -49,6 +49,33 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.1
+
+Windows fixes found by running the PowerShell implementation on Windows
+PowerShell 5.1 for the first time. The shell implementation was unaffected.
+
+### Fixed
+
+- **The brain and calendar icons vanished from the status line.** They were
+  built with `[char]`, and `System.Char` holds a single UTF-16 code unit, so a
+  code point above U+FFFF throws and the surrounding expression silently
+  collapses to an empty string. The hourglass survived only because it happens
+  to sit in the BMP. Icons now go through `[char]::ConvertFromUtf32`.
+- **Reset times printed as `08-30` instead of `08/30`.** In a .NET custom date
+  format `/` is not a literal slash - it stands for the current culture's date
+  separator, which is `-` under ko-KR. Formatting now goes through the
+  invariant culture, matching what `strflocaltime` produces in the shell.
+- **The test harness escaped sandbox paths twice**, so every PowerShell case
+  failed on the home-directory abbreviation. Paths are now substituted with
+  forward slashes, which need no JSON escaping and let one expected file serve
+  both runners.
+
+### Added
+
+- `12-windows-path`, covering the backslash round-trip that Claude Code
+  actually feeds the status line on Windows, and the half-away-from-zero
+  rounding both implementations have to agree on.
+
 ## 1.1.0
 
 - Show the local time each limit resets: `n% (MM/DD HH:MM)`.
