@@ -1,4 +1,12 @@
-# 셸 스크립트는 항상 LF로 체크아웃한다.
-# core.autocrlf=true 인 Windows에서 clone하면 CRLF가 되어
-# "bad interpreter: /bin/sh^M" 으로 실행이 깨진다.
+# Shell scripts must always check out with LF. With core.autocrlf=true on
+# Windows a clone would rewrite them to CRLF and execution breaks with
+# "bad interpreter: /bin/sh^M".
 *.sh text eol=lf
+
+# The test fixtures are compared byte for byte, so their line endings must not
+# depend on the platform they were checked out on.
+tests/cases/** text eol=lf
+
+# PowerShell reads LF fine; pinning it keeps both implementations identical in
+# the diff.
+*.ps1 text eol=lf

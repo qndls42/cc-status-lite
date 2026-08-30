@@ -1,18 +1,33 @@
 ---
 name: statusline-uninstall
-description: statusline-pro 상태줄을 제거하고 이전 statusLine 을 복원한다. 사용자가 "상태줄 제거", "statusline 삭제", "/statusline-uninstall" 이라고 할 때 사용한다.
+description: Remove the statusline-pro status line. Use when the user says "remove the status line", "statusline uninstall", "/statusline-uninstall", or asks to turn statusline-pro off.
 ---
 
-# statusline-pro 제거
+# Uninstall statusline-pro
 
-`${CLAUDE_PLUGIN_ROOT}/scripts/uninstall.sh` 를 실행하고 출력을 사용자에게 그대로 보고한다.
+Run the uninstaller for the user's platform and report its output verbatim.
+
+macOS, Linux, or Windows with Git Bash:
 
 ```bash
 sh "${CLAUDE_PLUGIN_ROOT}/scripts/uninstall.sh"
 ```
 
-## 규칙
+Windows without Git Bash:
 
-- 현재 statusLine 이 statusline-pro 가 아니면 스크립트는 아무것도 건드리지 않고 종료한다. 그 결과를 그대로 전달할 것.
-- 설치 시 백업해 둔 이전 statusLine 이 있으면 자동 복원된다. 없으면 `statusLine` 키를 지운다.
-- `settings.json.bak.statusline-pro` 백업 파일은 남겨둔다. 사용자가 명시적으로 요청하지 않는 한 지우지 말 것.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scripts/uninstall.ps1"
+```
+
+## Rules
+
+- The script does the work. Never edit `settings.json` by hand - it holds the
+  user's hooks, plugin list and marketplace configuration, and a hand edit
+  risks all of it.
+- The script removes only the `statusLine` key. Everything else is untouched.
+- If a status line was backed up during install, it is restored and the script
+  says so. Pass that on.
+- If the current status line is not statusline-pro, the script exits without
+  changing anything. Report that rather than forcing it.
+- This removes the status line, not the plugin. To remove the plugin itself the
+  user runs `/plugin uninstall statusline-pro@statusline-pro`.

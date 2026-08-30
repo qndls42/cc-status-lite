@@ -1,0 +1,5 @@
+# Per-user Claude Code settings; never part of the plugin.
+.claude/settings.local.json
+
+# Test sandboxes are created under the system temp directory, but be explicit.
+tests/out/

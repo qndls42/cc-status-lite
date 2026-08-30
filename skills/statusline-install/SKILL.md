@@ -1,35 +1,50 @@
 ---
 name: statusline-install
-description: statusline-pro 상태줄을 설치한다. 사용자가 "상태줄 설치", "statusline 설치", "/statusline-install" 이라고 하거나 statusline-pro 를 켜고 싶다고 할 때 사용한다.
+description: Install the statusline-pro status line. Use when the user says "install the status line", "statusline install", "/statusline-install", or otherwise asks to turn statusline-pro on.
 ---
 
-# statusline-pro 설치
+# Install statusline-pro
 
-`${CLAUDE_PLUGIN_ROOT}/scripts/install.sh` 를 실행하고 출력을 사용자에게 그대로 보고한다.
+Run the installer for the user's platform and report its output verbatim.
+
+macOS, Linux, or Windows with Git Bash:
 
 ```bash
 sh "${CLAUDE_PLUGIN_ROOT}/scripts/install.sh"
 ```
 
-## 규칙
+Windows without Git Bash (or when `jq` is not installed):
 
-- 스크립트가 모든 작업을 한다. JSON 을 직접 편집하지 말 것.
-- `jq` 가 없어서 실패하면 출력에 안내된 설치 명령을 사용자에게 그대로 전달한다. 대신 설치해 주지 말 것.
-- 스크립트가 "기존 statusLine 을 백업했습니다" 를 출력하면 **반드시** 사용자에게 알린다. 다른 상태줄을 덮어쓴 것이며 `/statusline-uninstall` 로 되돌릴 수 있다.
-- 마지막에 다음을 전달한다: 새 세션부터 반영되고, 5h/7d 는 첫 갱신까지 최대 1분 걸린다.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scripts/install.ps1"
+```
 
-## 설치되는 것
+## Rules
 
-두 줄 상태줄:
+- The script does the work. Never edit `settings.json` by hand.
+- If it fails because `jq` is missing, pass the printed install command to the
+  user. Do not install `jq` for them. On Windows, offer `install.ps1` instead -
+  it needs neither `jq` nor Git Bash.
+- If the script prints "Backed up your existing status line", **tell the user**.
+  Another status line was replaced, and `/statusline-uninstall` restores it.
+- Close by saying: the status line appears in new sessions, and the 5h/7d
+  figures need up to a minute for their first refresh.
+- Updates need no action. A SessionStart hook keeps the installed copy in sync
+  with the plugin, so `/plugin update` is enough.
+
+## What gets installed
 
 ```
 [Opus 5] ~/my-project (main)
 🧠 32% (64k/200k)  ⏳ 5h 21% (07/27 19:40)  📅 7d 30% (07/30 08:59)
 ```
 
-- 🧠 컨텍스트 사용률 / 사용 토큰 / 최대
-- ⏳ 5시간 한도, 📅 주간 한도 — 괄호 안은 초기화되는 로컬 시각
-- 색상은 70% 노랑, 90% 빨강. 초기화 시각은 평소 흐리게, 70% 부터 함께 강조
-- 갱신 실패가 15분 넘으면 값을 숨기지 않고 흐리게 표시
+- 🧠 context usage: percentage, tokens used, context window size
+- ⏳ 5-hour limit, 📅 weekly limit - in brackets, the local time each one resets
+- Colours: yellow at 70%, red at 90%. The reset time is dim until the
+  percentage reaches 70%, then it takes the same colour.
+- If a refresh fails for more than 15 minutes the values are dimmed rather than
+  hidden, so they stay visible but marked as no longer current.
 
-사용자가 5h/7d 가 안 보인다고 하면 `${CLAUDE_PLUGIN_ROOT}/README.md` 의 문제 해결 항목을 확인한다.
+If the user reports that the 5h/7d values are missing, check the Troubleshooting
+section of `${CLAUDE_PLUGIN_ROOT}/README.md`.
