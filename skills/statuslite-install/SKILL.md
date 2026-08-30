@@ -36,11 +36,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scrip
 
 ```
 [Opus 5] ~/my-project (main)
-🧠 32% (64k/200k)  ⏳ 5h 21% (07/27 19:40)  📅 7d 30% (07/30 08:59)
+🧠 32% (64k/200k)  🕐 5h 21% (07/27 19:40)  📅 7d 30% (07/30 08:59)
 ```
 
 - 🧠 context usage: percentage, tokens used, context window size
-- ⏳ 5-hour limit, 📅 weekly limit - in brackets, the local time each one resets
+- 🕐 5-hour limit, 📅 weekly limit - in brackets, the local time each one resets
 - Colours: yellow at 70%, red at 90%. The reset time is dim until the
   percentage reaches 70%, then it takes the same colour.
 - If a refresh fails for more than 15 minutes the values are dimmed rather than

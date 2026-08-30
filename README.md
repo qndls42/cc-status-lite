@@ -5,11 +5,11 @@ weekly limits on the right, each with the local time it resets.
 
 ```
 [Opus 5] ~/my-project (main)
-🧠 32% (64k/200k)  ⏳ 5h 21% (07/27 19:40)  📅 7d 30% (07/30 08:59)
+🧠 32% (64k/200k)  🕐 5h 21% (07/27 19:40)  📅 7d 30% (07/30 08:59)
 ```
 
 - 🧠 context usage - percentage, tokens used, context window size (1M models included)
-- ⏳ 5-hour limit and 📅 weekly limit, with the local time each resets in brackets
+- 🕐 5-hour limit and 📅 weekly limit, with the local time each resets in brackets
 - Yellow at 70%, red at 90%. The reset time stays dim until the percentage hits
   70%, then takes the same colour
 - If a refresh fails for more than 15 minutes the values are dimmed rather than

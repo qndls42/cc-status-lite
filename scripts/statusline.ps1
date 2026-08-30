@@ -175,9 +175,11 @@ $GREEN = "$e[32m"; $YELLOW = "$e[33m"; $RED = "$e[31m"; $DIM = "$e[2m"; $RESET =
 # would mangle literal emoji. [char] is not usable either - System.Char is a
 # single UTF-16 code unit, so anything above U+FFFF throws and the surrounding
 # expression silently collapses to an empty string. ConvertFromUtf32 returns
-# the surrogate pair, and works for BMP code points too.
+# the surrogate pair. All three icons here are astral: a BMP symbol such as
+# the hourglass U+23F3 renders as a narrow monochrome glyph in most terminals,
+# because the text font is found before the emoji font in the fallback chain.
 $ICON_CTX = [char]::ConvertFromUtf32(0x1F9E0)   # brain, astral
-$ICON_5H  = [char]::ConvertFromUtf32(0x23F3)    # hourglass, BMP
+$ICON_5H  = [char]::ConvertFromUtf32(0x1F550)   # clock face, astral
 $ICON_7D  = [char]::ConvertFromUtf32(0x1F4C5)   # calendar, astral
 
 # After 15 minutes without a successful refresh, dim the values rather than

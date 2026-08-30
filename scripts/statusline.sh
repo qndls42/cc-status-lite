@@ -142,7 +142,7 @@ add() { if [ -z "$line2" ]; then line2="$1"; else line2="$line2  $1"; fi; }
 # After 15 minutes without a successful refresh, dim the values rather than
 # hiding them: they stay visible, just marked as no longer current.
 [ "$cache_age" -ge 900 ] && stale=1
-[ -n "$h5" ] && { c_of "$h5"; seg="⏳ 5h $C$h5%$RESET"
+[ -n "$h5" ] && { c_of "$h5"; seg="🕐 5h $C$h5%$RESET"
                   [ -n "$h5r" ] && seg="$seg $CR($h5r)$RESET"
                   add "$seg"; }
 [ -n "$d7" ] && { c_of "$d7"; seg="📅 7d $C$d7%$RESET"

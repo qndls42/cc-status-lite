@@ -49,6 +49,22 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.3
+
+### Changed
+
+- **The 5-hour icon is a clock face rather than an hourglass.** U+23F3 sits in
+  the BMP, so terminals find a monochrome glyph for it in the text font before
+  the emoji font is ever consulted - it rendered narrow and grey next to the
+  brain and calendar, which are astral and therefore always reach the colour
+  emoji font. All three icons are now astral.
+
+### Fixed
+
+- Update mode reported "1 passed" after rewriting twelve expectation files,
+  because the counter only tracked the regex cases it does not touch. It now
+  says how many were updated and how many were verified by pattern.
+
 ## 2.0.2
 
 Every PowerShell read was missing an encoding. Found while chasing why the
