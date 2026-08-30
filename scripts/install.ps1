@@ -7,6 +7,8 @@
 # reinstall is needed after an update.
 $ErrorActionPreference = 'Stop'
 
+. (Join-Path (Split-Path -Parent $PSCommandPath) 'json-format.ps1')
+
 $root = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
 $cfg = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $env:USERPROFILE '.claude' }
 $dest = Join-Path $cfg 'cc-status-lite.ps1'
@@ -55,7 +57,7 @@ if ($obj.PSObject.Properties.Name -contains 'statusLine') {
 $tmp = "$settings.tmp.$PID"
 # Windows PowerShell's -Encoding UTF8 prepends a BOM. settings.json is read
 # by jq in the shell scripts and by Claude Code itself, so write it clean.
-[IO.File]::WriteAllText($tmp, ($obj | ConvertTo-Json -Depth 100),
+[IO.File]::WriteAllText($tmp, (ConvertTo-SettingsJson $obj),
                         (New-Object Text.UTF8Encoding($false)))
 Move-Item -LiteralPath $tmp -Destination $settings -Force
 

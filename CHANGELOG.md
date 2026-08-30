@@ -49,6 +49,25 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.5
+
+### Changed
+
+- **The PowerShell installer no longer reshapes `settings.json`.**
+  `ConvertTo-Json` on Windows PowerShell aligns nested values under the key
+  that introduces them and puts two spaces after every colon, which turned a
+  4.6 KB settings file into 10.9 KB with lines approaching 400 characters.
+  Nothing broke, but installing a status line should not rewrite the layout of
+  a file other tools and the user also edit, and the shell installer leaves a
+  different shape again. Output now matches what `jq` produces: two spaces per
+  level, one space after the colon, so both installers agree.
+
+  The re-indenter only moves whitespace outside string literals, and its output
+  is parsed back and compared against the untouched serialisation before
+  anything is written. If that comparison ever fails it falls back to
+  PowerShell's own output, so the worst case is the old formatting rather than
+  a damaged settings file.
+
 ## 2.0.4
 
 ### Fixed
