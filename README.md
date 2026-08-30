@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue"></a>
-  <a href="https://github.com/qndls42/cc-status-lite/tags"><img alt="Version" src="https://img.shields.io/github/v/tag/qndls42/cc-status-lite?label=version"></a>
+  <a href="https://github.com/qndls42/cc-status-lite/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/qndls42/cc-status-lite"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-macOS%20%C2%B7%20Linux%20%C2%B7%20Windows-lightgrey">
   <a href="README.ko.md"><img alt="Korean" src="https://img.shields.io/badge/README-%ED%95%9C%EA%B5%AD%EC%96%B4-lightgrey"></a>
 </p>
