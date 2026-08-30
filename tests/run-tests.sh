@@ -24,6 +24,7 @@ update=""
 ESC=$(printf '\033')
 pass=0
 fail=0
+updated=0
 
 for case_dir in "$root"/tests/cases/*/; do
   name=$(basename "$case_dir")
@@ -73,6 +74,7 @@ for case_dir in "$root"/tests/cases/*/; do
   if [ -n "$update" ]; then
     printf '%s\n' "$actual_esc" > "$case_dir/expected.txt"
     echo "  wrote $name"
+    updated=$((updated + 1))
     continue
   fi
 
@@ -87,5 +89,11 @@ for case_dir in "$root"/tests/cases/*/; do
 done
 
 echo
-echo "$pass passed, $fail failed"
+# In update mode most cases are rewritten rather than compared, so reporting
+# them as "passed" would be misleading - only the regex cases are still checked.
+if [ -n "$update" ]; then
+  echo "$updated updated, $pass verified by pattern, $fail failed"
+else
+  echo "$pass passed, $fail failed"
+fi
 [ "$fail" -eq 0 ]

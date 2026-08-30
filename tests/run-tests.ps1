@@ -24,6 +24,7 @@ $esc = [char]27
 
 $pass = 0
 $fail = 0
+$updated = 0
 
 function Invoke-StatusLine($inputText, $sandbox) {
     $psi = New-Object Diagnostics.ProcessStartInfo
@@ -120,6 +121,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
         [IO.File]::WriteAllText($expectedFile, $actualEsc + "`n",
                                 (New-Object Text.UTF8Encoding($false)))
         Write-Output "  wrote $name"
+        $updated++
         continue
     }
 
@@ -137,5 +139,11 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
 }
 
 Write-Output ""
-Write-Output "$pass passed, $fail failed"
+# In update mode most cases are rewritten rather than compared, so reporting
+# them as "passed" would be misleading - only the regex cases are still checked.
+if ($Update) {
+    Write-Output "$updated updated, $pass verified by pattern, $fail failed"
+} else {
+    Write-Output "$pass passed, $fail failed"
+}
 if ($fail -gt 0) { exit 1 }
