@@ -57,7 +57,16 @@ To do it yourself instead:
 | **macOS · Linux** | `jq` |
 | **Windows** | nothing |
 
-`jq` is the only thing you may have to install, and the installer checks for it. The status line also calls `curl` and `git`, but both ship with macOS and every mainstream Linux — on the rare system without them, the limits (`curl`) or the branch (`git`) are simply left out and the rest still renders.
+`jq` is the only thing the installer checks for, and the only one you normally have to install.
+
+> [!NOTE]
+> The status line also calls `curl` and `git`. Both ship with macOS and every mainstream Linux, so there is usually nothing to do — but on a slim container image or a minimal server install you may need to add them:
+>
+> ```bash
+> sudo apt install curl git
+> ```
+>
+> `curl` is what fetches the 5-hour and weekly figures from the API; without it those two segments never appear. `git` is what reads the branch name; without it the branch is left out. Everything else renders either way.
 
 <details>
 <summary><strong>macOS · Linux</strong> — installing <code>jq</code></summary>
