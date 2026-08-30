@@ -52,17 +52,20 @@ Claude Code를 재시작하면 다음 세션에서 Claude가 상태줄을 켤지
 
 ### 준비물
 
-| 플랫폼 | 필요한 것 |
-|---|---|
-| **macOS · Linux** | `jq`, `curl`, `git` |
-| **Windows** | 없음 |
+| | macOS · Linux | Windows |
+|---|---|---|
+| **꼭 필요** | `jq` | 없음 |
+| **5h/7d 값에 필요** | `curl` | 없음 |
+| **git 브랜치 표시에 필요** | `git` | `git` |
+
+진짜 필수는 `jq` 하나뿐이고, 그것도 macOS·Linux에서만입니다. 설치 스크립트가 이것만 확인하고 없으면 멈춥니다. `curl`이 없으면 한도 값만 안 나오고 나머지는 그대로 뜹니다. `git`이 없으면 브랜치만 안 보입니다. 둘 다 개발용 컴퓨터라면 거의 항상 이미 있습니다.
 
 <details>
 <summary><strong>macOS · Linux</strong> — <code>jq</code> 설치하기</summary>
 
 <br>
 
-`curl`과 `git`은 웬만하면 이미 깔려 있습니다. `jq`가 없으면 설치 스크립트가 플랫폼에 맞는 명령을 알려주고 멈춥니다. 알아서 깔아주지는 않습니다.
+`jq`가 없으면 설치 스크립트가 플랫폼에 맞는 명령을 알려주고 멈춥니다. 알아서 깔아주지는 않습니다.
 
 ```bash
 brew install jq          # macOS

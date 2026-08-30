@@ -52,17 +52,20 @@ To do it yourself instead:
 
 ### Requirements
 
-| Platform | Needs |
-|---|---|
-| **macOS · Linux** | `jq`, `curl`, `git` |
-| **Windows** | nothing extra |
+| | macOS · Linux | Windows |
+|---|---|---|
+| **Required** | `jq` | nothing |
+| **For the 5h/7d figures** | `curl` | nothing |
+| **For the git branch** | `git` | `git` |
+
+Only `jq` is a hard requirement, and only on macOS and Linux — the installer checks for it and stops if it is missing. Without `curl` everything renders except the limits; without `git` everything renders except the branch. Both are already present on essentially every developer machine.
 
 <details>
 <summary><strong>macOS · Linux</strong> — installing <code>jq</code></summary>
 
 <br>
 
-`curl` and `git` are almost always already there. If `jq` is missing the installer prints the command for your platform and stops — it never installs anything on your behalf.
+If `jq` is missing the installer prints the command for your platform and stops — it never installs anything on your behalf.
 
 ```bash
 brew install jq          # macOS
