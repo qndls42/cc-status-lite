@@ -64,7 +64,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     $cacheAge = 0
     $optsFile = Join-Path $caseDir.FullName 'opts'
     if (Test-Path -LiteralPath $optsFile) {
-        foreach ($line in (Get-Content -LiteralPath $optsFile)) {
+        foreach ($line in (Get-Content -LiteralPath $optsFile -Encoding UTF8)) {
             if ($line -match '^\s*cache_age\s*=\s*(\d+)\s*$') { $cacheAge = [int]$Matches[1] }
         }
     }
@@ -88,7 +88,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
     # serves both runners. Backslash handling has its own case instead.
     $homeFwd = $sandbox.Replace('\', '/')
     $dirFwd = (Join-Path $sandbox 'work').Replace('\', '/')
-    $inputText = (Get-Content -LiteralPath $inputFile -Raw).
+    $inputText = (Get-Content -LiteralPath $inputFile -Raw -Encoding UTF8).
         Replace('{HOME}', $homeFwd).
         Replace('{DIR}', $dirFwd)
 
@@ -102,7 +102,7 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
         # The pattern is written so that grep -E and .NET agree: \\e matches a
         # literal backslash followed by e, which is how ESC is spelled in the
         # comparison strings.
-        $re = ((Get-Content -LiteralPath $reFile -Raw).Trim())
+        $re = ((Get-Content -LiteralPath $reFile -Raw -Encoding UTF8).Trim())
         if ($actualEsc -match $re) {
             $pass++; Write-Output "  ok    $name"
         } else {
@@ -115,14 +115,17 @@ foreach ($caseDir in (Get-ChildItem -LiteralPath (Join-Path $root 'tests\cases')
 
     $expectedFile = Join-Path $caseDir.FullName 'expected.txt'
     if ($Update) {
-        Set-Content -LiteralPath $expectedFile -Value $actualEsc -Encoding UTF8
+        # Not Set-Content -Encoding UTF8: on Windows PowerShell that writes a
+        # BOM, which the shell runner would then compare byte for byte.
+        [IO.File]::WriteAllText($expectedFile, $actualEsc + "`n",
+                                (New-Object Text.UTF8Encoding($false)))
         Write-Output "  wrote $name"
         continue
     }
 
     $expected = ''
     if (Test-Path -LiteralPath $expectedFile) {
-        $expected = (Get-Content -LiteralPath $expectedFile -Raw).TrimEnd("`r", "`n") -replace "`r`n", "`n"
+        $expected = (Get-Content -LiteralPath $expectedFile -Raw -Encoding UTF8).TrimEnd("`r", "`n") -replace "`r`n", "`n"
     }
     if ($actualEsc -eq $expected) {
         $pass++; Write-Output "  ok    $name"

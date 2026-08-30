@@ -13,7 +13,7 @@ if (-not (Test-Path -LiteralPath $settings)) {
 }
 
 try {
-    $raw = (Get-Content -LiteralPath $settings -Raw) -replace ('^' + [char]0xFEFF), ''
+    $raw = (Get-Content -LiteralPath $settings -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), ''
     $obj = ConvertFrom-Json $raw
 } catch {
     Write-Output "ERROR: $settings is not valid JSON. Fix it by hand and run this again."
@@ -30,7 +30,7 @@ if ($cur -notlike '*cc-status-lite*') {
 }
 
 if (Test-Path -LiteralPath $prevfile) {
-    $prev = (Get-Content -LiteralPath $prevfile -Raw).Trim()
+    $prev = ((Get-Content -LiteralPath $prevfile -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), '').Trim()
     $obj.statusLine = [pscustomobject]@{ type = 'command'; command = $prev }
     Write-Output "Restored your previous status line: $prev"
     Remove-Item -LiteralPath $prevfile -Force

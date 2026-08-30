@@ -21,7 +21,7 @@ if ($Refresh) {
     $credPath = Join-Path $cfg '.credentials.json'
     if (-not (Test-Path -LiteralPath $credPath)) { exit 0 }
     try {
-        $cred = ConvertFrom-Json ((Get-Content -LiteralPath $credPath -Raw) -replace ('^' + [char]0xFEFF), '')
+        $cred = ConvertFrom-Json ((Get-Content -LiteralPath $credPath -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), '')
     } catch { exit 0 }
     $tok = if ($cred.claudeAiOauth) { $cred.claudeAiOauth.accessToken } else { $cred.accessToken }
     if (-not $tok) { exit 0 }
@@ -142,7 +142,7 @@ $h5 = ''; $h5r = ''; $d7 = ''; $d7r = ''
 $cacheAge = Get-AgeSeconds $cache
 if (Test-Path -LiteralPath $cache) {
     try {
-        $u = ConvertFrom-Json ((Get-Content -LiteralPath $cache -Raw) -replace ('^' + [char]0xFEFF), '')
+        $u = ConvertFrom-Json ((Get-Content -LiteralPath $cache -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), '')
         # resets_at looks like "2026-07-27T10:40:00.455018+00:00" (UTC).
         # DateTimeOffset handles the fractional seconds and the offset, and
         # LocalDateTime does the conversion.

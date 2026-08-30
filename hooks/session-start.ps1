@@ -30,7 +30,7 @@ $cur = ''
 if (Test-Path -LiteralPath $settings) {
     try {
         # Strip a UTF-8 BOM: some editors prepend one and it breaks the parser.
-        $raw = (Get-Content -LiteralPath $settings -Raw) -replace ('^' + [char]0xFEFF), ''
+        $raw = (Get-Content -LiteralPath $settings -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), ''
         $cur = ([string](ConvertFrom-Json $raw).statusLine.command)
     } catch { $cur = '' }
 }

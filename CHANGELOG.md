@@ -49,6 +49,25 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.2
+
+Every PowerShell read was missing an encoding. Found while chasing why the
+test comparison failed on a ko-KR machine; the same omission sat in code that
+writes the user's settings back.
+
+### Fixed
+
+- **`Get-Content` without `-Encoding UTF8` decodes as the system ANSI code
+  page on Windows PowerShell 5.1.** All ten read sites are now explicit. Two of
+  them mattered beyond the tests: `install.ps1` and `uninstall.ps1` read
+  `settings.json` and write it back, so on a non-ASCII code page any Korean
+  text in the file would have been corrupted on the round trip.
+- **`Set-Content -Encoding UTF8` writes a BOM on Windows PowerShell.** The
+  previous status line was saved that way, so a restore would have prefixed the
+  command with U+FEFF; regenerated test expectations would likewise have picked
+  up a BOM the shell runner compares byte for byte. Both now go through
+  `UTF8Encoding($false)`.
+
 ## 2.0.1
 
 Windows fixes found by running the PowerShell implementation on Windows

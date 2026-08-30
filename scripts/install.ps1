@@ -22,7 +22,7 @@ if (-not (Test-Path -LiteralPath $settings)) {
 # Leave a broken settings.json alone.
 try {
     # Strip a UTF-8 BOM: some editors prepend one and it breaks the parser.
-    $raw = (Get-Content -LiteralPath $settings -Raw) -replace ('^' + [char]0xFEFF), ''
+    $raw = (Get-Content -LiteralPath $settings -Raw -Encoding UTF8) -replace ('^' + [char]0xFEFF), ''
     $obj = ConvertFrom-Json $raw
 } catch {
     Write-Output "ERROR: $settings is not valid JSON. Fix it by hand and run this again."
@@ -34,7 +34,8 @@ if ($null -eq $obj) { $obj = [pscustomobject]@{} }
 $prev = ''
 if ($obj.statusLine) { $prev = [string]$obj.statusLine.command }
 if ($prev -and $prev -notlike '*cc-status-lite*') {
-    $prev | Set-Content -LiteralPath (Join-Path $cfg '.cc-status-lite-previous') -Encoding UTF8
+    [IO.File]::WriteAllText((Join-Path $cfg '.cc-status-lite-previous'), $prev,
+                            (New-Object Text.UTF8Encoding($false)))
     Write-Output "Backed up your existing status line: $prev"
 }
 
