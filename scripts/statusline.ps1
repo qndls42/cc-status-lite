@@ -135,7 +135,9 @@ function Get-AgeSeconds([string]$path) {
 # The 5h/7d limits are not in stdin, so they need an authenticated API call.
 # The status line runs on every render and must never block: read the cache
 # only, and kick off a detached refresh when it is older than a minute.
-if ((Get-AgeSeconds $stamp) -ge 60) {
+# The -not -Test-Path guard mirrors the shell version: with no config
+# directory there is nowhere to write the stamp or the cache.
+if ((Test-Path -LiteralPath $cfg) -and (Get-AgeSeconds $stamp) -ge 60) {
     New-Item -ItemType File -Path $stamp -Force | Out-Null   # stamp first, so
     # concurrent renders do not all fetch
     try {

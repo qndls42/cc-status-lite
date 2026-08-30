@@ -1,7 +1,7 @@
 {
   "name": "cc-status-lite",
   "displayName": "CC Status Lite",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Two-line status line showing context usage and your 5-hour and weekly limits, each with the time it resets. Works on Windows, macOS and Linux.",
   "author": {
     "name": "qndls42",

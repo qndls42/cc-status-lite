@@ -49,6 +49,21 @@ First public release, distributed as a plugin marketplace.
   is absent, which is the case until a session has used some tokens.
 - Concurrent refreshes no longer share one temporary file name.
 
+## 2.0.6
+
+### Fixed
+
+- The refresh no longer runs when the config directory does not exist. The
+  stamp write failed and printed to stderr on every render, which is harmless
+  in normal use but noisy for anyone pointing `CLAUDE_CONFIG_DIR` somewhere
+  that has not been created yet.
+
+### Documentation
+
+- Rewrote the README for a public audience, with a rendered example of the
+  status line, an install path that fits in three commands, and a Korean
+  translation kept in step at `README.ko.md`.
+
 ## 2.0.5
 
 ### Changed

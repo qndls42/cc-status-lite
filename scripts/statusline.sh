@@ -58,7 +58,9 @@ age() {
 # only, and kick off a background refresh when it is older than a minute.
 uc="$cfg/.cc-status-lite-cache.json"
 age "$uc.stamp"
-if [ "$AGE" -ge 60 ]; then
+# Skip the refresh entirely when the config directory is missing, rather than
+# letting the stamp write fail and print to stderr on every render.
+if [ -d "$cfg" ] && [ "$AGE" -ge 60 ]; then
   : > "$uc.stamp"   # stamp first so concurrent renders do not all fetch
   (
     # Token lookup: the macOS keychain, otherwise .credentials.json.
