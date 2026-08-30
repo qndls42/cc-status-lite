@@ -52,13 +52,12 @@ To do it yourself instead:
 
 ### Requirements
 
-| | macOS · Linux | Windows |
-|---|---|---|
-| **Required** | `jq` | nothing |
-| **For the 5h/7d figures** | `curl` | nothing |
-| **For the git branch** | `git` | `git` |
+| Platform | Needs |
+|---|---|
+| **macOS · Linux** | `jq` |
+| **Windows** | nothing |
 
-Only `jq` is a hard requirement, and only on macOS and Linux — the installer checks for it and stops if it is missing. Without `curl` everything renders except the limits; without `git` everything renders except the branch. Both are already present on essentially every developer machine.
+`jq` is the only thing you may have to install, and the installer checks for it. The status line also calls `curl` and `git`, but both ship with macOS and every mainstream Linux — on the rare system without them, the limits (`curl`) or the branch (`git`) are simply left out and the rest still renders.
 
 <details>
 <summary><strong>macOS · Linux</strong> — installing <code>jq</code></summary>
